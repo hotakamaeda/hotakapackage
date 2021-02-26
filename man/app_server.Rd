@@ -1,14 +1,14 @@
-\name{shine}
-\alias{shine}
+\name{app_server}
+\alias{app_server}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{opens NBOME exam shiny app
+\title{Shiny app. Server function
 %%  ~~function to do ... ~~
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-shine(x)
+app_server(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
