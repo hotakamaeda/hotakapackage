@@ -5,6 +5,9 @@
 %%  ~~function to do ... ~~
 }
 \description{
+The data are read as
+readRDS("//ord-isi-data/public/Staff_Folders/Hotaka_Maeda/RShiny/Data/ShinyData_0.rds")
+so they must be stored there.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{

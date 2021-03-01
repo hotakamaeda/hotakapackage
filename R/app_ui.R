@@ -5,18 +5,18 @@
 #'
 
 app_ui <- function(){
-  exams=sort(unique(hotakapackage::AA$Exam))
+  ShinyData=readRDS("//ord-isi-data/public/Staff_Folders/Hotaka_Maeda/RShiny/Data/ShinyData_0.rds")
+  exams=sort(unique(ShinyData$Exam))
   shinydashboard::dashboardPage(
-    shinydashboard::dashboardHeader(title="Score Relationships between Two Exams",
+    shinydashboard::dashboardHeader(title="NBOME Exam Score Analysis",
                                     titleWidth = 700
     ),
-    # dashboardSidebar(disable = TRUE),
-    # dashboardBody(
-    # fluidRow(
-    #   box(
-    # sidebarLayout(
 
     shinydashboard::dashboardSidebar(
+      width=300,
+      sidebarMenu(
+        shinydashboard::menuItem("Univariate View", tabName = "Univariate",badgeLabel = "click here", badgeColor = "red"),
+        shinydashboard::menuItem("Bivariate View", tabName = "Bivariate",badgeLabel = "click here", badgeColor = "green")),
       shiny::selectInput("Exam1",
                          "Exam 1",
                          exams,
@@ -33,26 +33,42 @@ app_ui <- function(){
                             "Exam 2 Date Range",
                             start = "2000-01-01",
                             end = lubridate::today()),
-      shiny::sliderInput("graddate",
-                         "Expected Graduation Year Range",
-                         min = 1900,
-                         max = 2100,
-                         value = c(1900,2100),
-                         step=1),
+      shiny::uiOutput('choose_graddate'),
       shiny::checkboxInput("LimitN",
-                           "Limit N to 1,000 (for faster load time)",
+                           "Limit N to 500 (faster loading)",
                            value=T),
       shiny::checkboxInput("Jitter",
-                           "Jitter (spread cases for visual clarity)",
+                           "Jitter (visual clarity)",
                            value=T),
       shiny::checkboxInput("Outliers",
-                           "Remove Outliers (for visual clarity)",
-                           value=F)),
+                           "Remove Outliers (visual clarity)",
+                           value=T)),
     # ),
-    shinydashboard::dashboardBody(
-      shiny::fluidRow(shinydashboard::box(shiny::plotOutput("plot1"),height = 650,width = 700),
-                      shinydashboard::box(shiny::textOutput("note"),height=100,width = 700)
+    shinydashboard::dashboardBody( # the width should add to 12
+      tags$head(
+        tags$style(HTML(".main-sidebar { font-size: 17px; }")) #change the font size
+      ),
+      shinydashboard::tabItems(
+        shinydashboard::tabItem(
+          tabName = "Univariate",
+          h2("Univariate Analysis (candidates that took at least 1 Exam)"),
+          shiny::fluidRow(shinydashboard::box(shiny::tableOutput("tableU1"),height = 550,width=4),
+                          shinydashboard::box(shiny::plotOutput("plotU1"),height = 550,width=4),
+                          shinydashboard::box(shiny::plotOutput("plotU2"),height = 550,width=4),
+          ),
+          "Note. Only 1st time attempt data are included. Blue lines show the medians."
+        ),
+        shinydashboard::tabItem(
+          tabName = "Bivariate",
+          h2("Bivariate Analysis (candidates that took both Exams)"),
+          shiny::fluidRow(shinydashboard::box(shiny::tableOutput("table1"),height = 550,width=4),
+                          shinydashboard::box(shiny::plotOutput("plot1"),height = 550,width=8)
+          ),
+          "Note. Only 1st time attempt data are included. Blue lines show the medians."
+          )
       )
     )
   )
 }
+
+
